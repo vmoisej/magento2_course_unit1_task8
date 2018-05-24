@@ -17,12 +17,17 @@ class RedirrectToProductView implements ObserverInterface
     /**
      * @param \Magento\Framework\App\Response\RedirectInterface $redirect
      */
+
+    protected $_logger;
+
     public function __construct(
         \Magento\Framework\App\Response\RedirectInterface $redirect,
-        \Magento\Framework\App\ActionFlag $actionFlag
+        \Magento\Framework\App\ActionFlag $actionFlag,
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->redirect = $redirect;
         $this->_actionFlag = $actionFlag;
+        $this->_logger = $logger;
     }
     /**
      *
@@ -43,6 +48,7 @@ class RedirrectToProductView implements ObserverInterface
             $controller = $observer->getControllerAction();
             $this->_actionFlag->set('', \Magento\Framework\App\Action\Action::FLAG_NO_DISPATCH, true);
             $this->redirect->redirect($controller->getResponse(), 'catalog/product/view/id/1');
+            $this->_logger->notice('Redirected to catalog/product');
         }
     }
 }
